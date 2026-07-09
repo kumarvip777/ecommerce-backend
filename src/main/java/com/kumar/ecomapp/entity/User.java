@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -57,6 +58,12 @@ public class User {
 
     @Column(name = "updated_by", length = 50)
     private String updatedBy;
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Address> addresses;
 
     @PrePersist
     protected void onCreate() {

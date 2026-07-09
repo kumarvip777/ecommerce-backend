@@ -14,6 +14,10 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import com.kumar.ecomapp.exception.address.AddressLimitExceededException;
+import com.kumar.ecomapp.exception.address.AddressNotFoundException;
+import com.kumar.ecomapp.exception.address.AddressUpdateException;
+import com.kumar.ecomapp.exception.address.NoAddressesFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -153,5 +157,65 @@ public class GlobalExceptionHandler {
                         "GEN_500",
                         request.getRequestURI()
                 ));
+    }
+    @ExceptionHandler(AddressNotFoundException.class)
+    public ResponseEntity<ApiResponse<?>> handleAddressNotFound(
+            AddressNotFoundException ex,
+            HttpServletRequest request) {
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(
+                        ApiResponse.error(
+                                ex.getMessage(),
+                                "ADDR_404",
+                                request.getRequestURI()
+                        )
+                );
+    }
+    @ExceptionHandler(NoAddressesFoundException.class)
+    public ResponseEntity<ApiResponse<?>> handleNoAddressesFound(
+            NoAddressesFoundException ex,
+            HttpServletRequest request) {
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(
+                        ApiResponse.error(
+                                ex.getMessage(),
+                                "ADDR_404",
+                                request.getRequestURI()
+                        )
+                );
+    }
+    @ExceptionHandler(AddressUpdateException.class)
+    public ResponseEntity<ApiResponse<?>> handleAddressUpdate(
+            AddressUpdateException ex,
+            HttpServletRequest request) {
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(
+                        ApiResponse.error(
+                                ex.getMessage(),
+                                "ADDR_409",
+                                request.getRequestURI()
+                        )
+                );
+    }
+    @ExceptionHandler(AddressLimitExceededException.class)
+    public ResponseEntity<ApiResponse<?>> handleAddressLimitExceeded(
+            AddressLimitExceededException ex,
+            HttpServletRequest request) {
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(
+                        ApiResponse.error(
+                                ex.getMessage(),
+                                "ADDR_400",
+                                request.getRequestURI()
+                        )
+                );
     }
 }
