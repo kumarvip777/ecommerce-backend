@@ -18,6 +18,10 @@ import com.kumar.ecomapp.exception.address.AddressLimitExceededException;
 import com.kumar.ecomapp.exception.address.AddressNotFoundException;
 import com.kumar.ecomapp.exception.address.AddressUpdateException;
 import com.kumar.ecomapp.exception.address.NoAddressesFoundException;
+import com.kumar.ecomapp.exception.category.CategoryAlreadyExistsException;
+import com.kumar.ecomapp.exception.category.CategoryNotFoundException;
+import com.kumar.ecomapp.exception.category.NoCategoriesFoundException;
+import com.kumar.ecomapp.exception.category.CategoryUpdateException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -214,6 +218,66 @@ public class GlobalExceptionHandler {
                         ApiResponse.error(
                                 ex.getMessage(),
                                 "ADDR_400",
+                                request.getRequestURI()
+                        )
+                );
+    }
+    @ExceptionHandler(CategoryAlreadyExistsException.class)
+    public ResponseEntity<ApiResponse<?>> handleCategoryAlreadyExists(
+            CategoryAlreadyExistsException ex,
+            HttpServletRequest request) {
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(
+                        ApiResponse.error(
+                                ex.getMessage(),
+                                "CAT_409",
+                                request.getRequestURI()
+                        )
+                );
+    }
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ResponseEntity<ApiResponse<?>> handleCategoryNotFound(
+            CategoryNotFoundException ex,
+            HttpServletRequest request) {
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(
+                        ApiResponse.error(
+                                ex.getMessage(),
+                                "CAT_404",
+                                request.getRequestURI()
+                        )
+                );
+    }
+    @ExceptionHandler(NoCategoriesFoundException.class)
+    public ResponseEntity<ApiResponse<?>> handleNoCategoriesFound(
+            NoCategoriesFoundException ex,
+            HttpServletRequest request) {
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(
+                        ApiResponse.error(
+                                ex.getMessage(),
+                                "CAT_404",
+                                request.getRequestURI()
+                        )
+                );
+    }
+    @ExceptionHandler(CategoryUpdateException.class)
+    public ResponseEntity<ApiResponse<?>> handleCategoryUpdate(
+            CategoryUpdateException ex,
+            HttpServletRequest request) {
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(
+                        ApiResponse.error(
+                                ex.getMessage(),
+                                "CAT_409",
                                 request.getRequestURI()
                         )
                 );
