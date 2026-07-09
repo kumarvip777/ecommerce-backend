@@ -1,0 +1,14 @@
+package com.kumar.ecomapp.repo;
+
+import com.kumar.ecomapp.entity.Address;
+import com.kumar.ecomapp.entity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface AddressRepository extends JpaRepository<Address, Long> {
+
+    List<Address> findByUser(User user);
+
+    List<Address> findByUserUserId(Long userId);
+}
