@@ -16,7 +16,7 @@ public class OpenApiConfig {
         Contact contact = new Contact()
                 .name("Praveen Kumar")
                 .email("praveen@gmail.com")
-                .url("https://github.com/praveenkumar");
+                .url("https://github.com/kumarvip777/ecommerce-backend");
 
         License license = new License()
                 .name("Apache 2.0")
