@@ -6,6 +6,7 @@ import com.kumar.ecomapp.exception.user.UserNotFoundException;
 import com.kumar.ecomapp.exception.user.UserUpdateException;
 import com.kumar.ecomapp.payload.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +23,24 @@ import com.kumar.ecomapp.exception.category.CategoryAlreadyExistsException;
 import com.kumar.ecomapp.exception.category.CategoryNotFoundException;
 import com.kumar.ecomapp.exception.category.NoCategoriesFoundException;
 import com.kumar.ecomapp.exception.category.CategoryUpdateException;
+import com.kumar.ecomapp.exception.product.ProductAlreadyExistsException;
+import com.kumar.ecomapp.exception.product.ProductNotFoundException;
+import com.kumar.ecomapp.exception.product.NoProductsFoundException;
+import com.kumar.ecomapp.exception.product.ProductUpdateException;
+import com.kumar.ecomapp.exception.cart.CartNotFoundException;
+import com.kumar.ecomapp.exception.cart.NoCartItemsFoundException;
+import com.kumar.ecomapp.exception.cart.CartUpdateException;
+import com.kumar.ecomapp.exception.order.NoOrdersFoundException;
+import com.kumar.ecomapp.exception.order.OrderNotFoundException;
+import com.kumar.ecomapp.exception.order.OrderUpdateException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    private static final Logger logger =
+            LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<ApiResponse<?>> handleUserAlreadyExists(
@@ -154,6 +170,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<?>> handleGenericException(
             Exception ex,
             HttpServletRequest request) {
+        logger.error("Unexpected Exception", ex);
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ApiResponse.error(
@@ -162,6 +179,7 @@ public class GlobalExceptionHandler {
                         request.getRequestURI()
                 ));
     }
+
     @ExceptionHandler(AddressNotFoundException.class)
     public ResponseEntity<ApiResponse<?>> handleAddressNotFound(
             AddressNotFoundException ex,
@@ -177,6 +195,7 @@ public class GlobalExceptionHandler {
                         )
                 );
     }
+
     @ExceptionHandler(NoAddressesFoundException.class)
     public ResponseEntity<ApiResponse<?>> handleNoAddressesFound(
             NoAddressesFoundException ex,
@@ -192,6 +211,7 @@ public class GlobalExceptionHandler {
                         )
                 );
     }
+
     @ExceptionHandler(AddressUpdateException.class)
     public ResponseEntity<ApiResponse<?>> handleAddressUpdate(
             AddressUpdateException ex,
@@ -207,6 +227,7 @@ public class GlobalExceptionHandler {
                         )
                 );
     }
+
     @ExceptionHandler(AddressLimitExceededException.class)
     public ResponseEntity<ApiResponse<?>> handleAddressLimitExceeded(
             AddressLimitExceededException ex,
@@ -222,6 +243,7 @@ public class GlobalExceptionHandler {
                         )
                 );
     }
+
     @ExceptionHandler(CategoryAlreadyExistsException.class)
     public ResponseEntity<ApiResponse<?>> handleCategoryAlreadyExists(
             CategoryAlreadyExistsException ex,
@@ -237,6 +259,7 @@ public class GlobalExceptionHandler {
                         )
                 );
     }
+
     @ExceptionHandler(CategoryNotFoundException.class)
     public ResponseEntity<ApiResponse<?>> handleCategoryNotFound(
             CategoryNotFoundException ex,
@@ -252,6 +275,7 @@ public class GlobalExceptionHandler {
                         )
                 );
     }
+
     @ExceptionHandler(NoCategoriesFoundException.class)
     public ResponseEntity<ApiResponse<?>> handleNoCategoriesFound(
             NoCategoriesFoundException ex,
@@ -267,6 +291,7 @@ public class GlobalExceptionHandler {
                         )
                 );
     }
+
     @ExceptionHandler(CategoryUpdateException.class)
     public ResponseEntity<ApiResponse<?>> handleCategoryUpdate(
             CategoryUpdateException ex,
@@ -282,4 +307,179 @@ public class GlobalExceptionHandler {
                         )
                 );
     }
+
+    @ExceptionHandler(ProductAlreadyExistsException.class)
+    public ResponseEntity<ApiResponse<?>> handleProductAlreadyExists(
+            ProductAlreadyExistsException ex,
+            HttpServletRequest request) {
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(
+                        ApiResponse.error(
+                                ex.getMessage(),
+                                "PROD_409",
+                                request.getRequestURI()
+                        )
+                );
+    }
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<ApiResponse<?>> handleProductNotFound(
+            ProductNotFoundException ex,
+            HttpServletRequest request) {
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(
+                        ApiResponse.error(
+                                ex.getMessage(),
+                                "PROD_404",
+                                request.getRequestURI()
+                        )
+                );
+    }
+
+    @ExceptionHandler(NoProductsFoundException.class)
+    public ResponseEntity<ApiResponse<?>> handleNoProductsFound(
+            NoProductsFoundException ex,
+            HttpServletRequest request) {
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(
+                        ApiResponse.error(
+                                ex.getMessage(),
+                                "PROD_404",
+                                request.getRequestURI()
+                        )
+                );
+    }
+
+    @ExceptionHandler(ProductUpdateException.class)
+    public ResponseEntity<ApiResponse<?>> handleProductUpdate(
+            ProductUpdateException ex,
+            HttpServletRequest request) {
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(
+                        ApiResponse.error(
+                                ex.getMessage(),
+                                "PROD_409",
+                                request.getRequestURI()
+                        )
+                );
+    }
+
+    @ExceptionHandler(CartNotFoundException.class)
+    public ResponseEntity<ApiResponse<?>> handleCartNotFound(
+            CartNotFoundException ex,
+            HttpServletRequest request) {
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(
+                        ApiResponse.error(
+                                ex.getMessage(),
+                                "CART_404",
+                                request.getRequestURI()
+                        )
+                );
+    }
+
+    @ExceptionHandler(NoCartItemsFoundException.class)
+    public ResponseEntity<ApiResponse<?>> handleNoCartItemsFound(
+            NoCartItemsFoundException ex,
+            HttpServletRequest request) {
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(
+                        ApiResponse.error(
+                                ex.getMessage(),
+                                "CART_404",
+                                request.getRequestURI()
+                        )
+                );
+    }
+
+    @ExceptionHandler(CartUpdateException.class)
+    public ResponseEntity<ApiResponse<?>> handleCartUpdate(
+            CartUpdateException ex,
+            HttpServletRequest request) {
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(
+                        ApiResponse.error(
+                                ex.getMessage(),
+                                "CART_409",
+                                request.getRequestURI()
+                        )
+                );
+    }
+
+    @ExceptionHandler(OrderNotFoundException.class)
+    public ResponseEntity<ApiResponse<?>> handleOrderNotFound(
+            OrderNotFoundException ex,
+            HttpServletRequest request) {
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(
+                        ApiResponse.error(
+                                ex.getMessage(),
+                                "ORD_404",
+                                request.getRequestURI()
+                        )
+                );
+    }
+
+    @ExceptionHandler(NoOrdersFoundException.class)
+    public ResponseEntity<ApiResponse<?>> handleNoOrdersFound(
+            NoOrdersFoundException ex,
+            HttpServletRequest request) {
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(
+                        ApiResponse.error(
+                                ex.getMessage(),
+                                "ORD_404",
+                                request.getRequestURI()
+                        )
+                );
+    }
+
+    @ExceptionHandler(OrderUpdateException.class)
+    public ResponseEntity<ApiResponse<?>> handleOrderUpdate(
+            OrderUpdateException ex,
+            HttpServletRequest request) {
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(
+                        ApiResponse.error(
+                                ex.getMessage(),
+                                "ORD_409",
+                                request.getRequestURI()
+                        )
+                );
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ApiResponse<?>> handleIllegalState(
+            IllegalStateException ex,
+            HttpServletRequest request) {
+
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(ApiResponse.error(
+                        ex.getMessage(),
+                        "USR_409",
+                        request.getRequestURI()
+                ));
+    }
+
+
 }

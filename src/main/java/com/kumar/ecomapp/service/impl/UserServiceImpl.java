@@ -204,6 +204,11 @@ public class UserServiceImpl implements UserService {
         logger.info("Found user with id: {}, email: {}",
                 userId,
                 user.getEmail());
+        if (user.getStatus() == UserStatus.DELETED) {
+            throw new IllegalStateException(
+                    "Cannot update a deleted user"
+            );
+        }
 
         applyUserNameUpdate(user, updateDTO);
         applyEmailUpdate(user, updateDTO);

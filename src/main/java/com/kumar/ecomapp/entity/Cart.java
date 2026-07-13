@@ -1,6 +1,5 @@
 package com.kumar.ecomapp.entity;
 
-import com.kumar.ecomapp.entity.enums.CategoryStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,41 +7,52 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "categories")
-public class Category {
+@Table(
+        name = "cart",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_user_product",
+                        columnNames = {
+                                "user_id",
+                                "product_id"
+                        }
+                )
+        }
+)
+public class Cart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long categoryId;
+    private Long cartId;
 
-    @Column(nullable = false, unique = true, length = 100)
-    private String categoryName;
-
-    @Column(length = 500)
-    private String description;
-
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private CategoryStatus status;
+    private Integer quantity;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "user_id",
+            nullable = false
+    )
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "product_id",
+            nullable = false
+    )
+    private Product product;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-    @OneToMany(
-            mappedBy = "category",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    private List<Product> products;
 
     @PrePersist
     protected void onCreate() {

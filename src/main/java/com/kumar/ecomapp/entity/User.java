@@ -65,6 +65,13 @@ public class User {
     )
     private List<Address> addresses;
 
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Cart> carts;
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
